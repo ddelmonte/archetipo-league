@@ -2,15 +2,16 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Trophy, Swords, BarChart3, Star, Home } from 'lucide-react'
+import { Trophy, Swords, BarChart3, Star, Home, Users } from 'lucide-react'
 import clsx from 'clsx'
 
 const links = [
-  { href: '/',            label: 'Home',        icon: Home },
-  { href: '/albo-doro',  label: 'Albo d\'oro', icon: Trophy },
-  { href: '/trofei',     label: 'Trofei',       icon: Star },
-  { href: '/rivalita',   label: 'Rivalità',     icon: Swords },
-  { href: '/classifiche',label: 'Classifiche',  icon: BarChart3 },
+  { href: '/',             label: 'Home',         icon: Home },
+  { href: '/albo-doro',   label: "Albo d'oro",   icon: Trophy },
+  { href: '/trofei',      label: 'Trofei',        icon: Star },
+  { href: '/rivalita',    label: 'Rivalita',      icon: Swords },
+  { href: '/classifiche', label: 'Classifiche',   icon: BarChart3 },
+  { href: '/squadre',     label: 'Squadre',       icon: Users },
 ]
 
 export default function Navbar() {
