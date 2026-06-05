@@ -6,10 +6,7 @@ import { ArrowLeft, Trophy, Star } from 'lucide-react'
 import Link from 'next/link'
 import clsx from 'clsx'
 
-export async function generateStaticParams() {
-  const rosters = await getAllTeamRosters()
-  return rosters.map(t => ({ username: t.user.display_name.toLowerCase() }))
-}
+export const dynamic = 'force-dynamic'
 
 const positionColor: Record<string, string> = {
   QB:  'bg-red-900/50 text-red-300 border-red-800',

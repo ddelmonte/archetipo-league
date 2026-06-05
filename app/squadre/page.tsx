@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { getAllTeamRosters, avatarUrl } from '@/lib/sleeper'
 import { getTeamStats } from '@/lib/sheets'
 import Link from 'next/link'
