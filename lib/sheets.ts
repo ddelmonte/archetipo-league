@@ -167,3 +167,67 @@ export async function getHeadToHead(): Promise<HeadToHeadMatrix> {
 
   return { teams, records }
 }
+
+// ── Playoff head-to-head matrix ────────────────────────────────────────────
+export interface PlayoffTeamRecord {
+  name: string
+  conference: 'AFC' | 'NFC'
+  totalW: number
+  totalL: number
+  tot: number
+  diff: number
+  vs: Record<string, { wins: number; losses: number }>
+}
+
+export async function getPlayoffHeadToHead(): Promise<{ teams: string[]; data: PlayoffTeamRecord[] }> {
+  const rows = await fetchCSV('W / L Playoff')
+
+  // Header row: "", "", "byzero", "", "GiangiMirac", ...
+  const headerRow = rows[0]
+  const teams: string[] = []
+  for (let i = 2; i < headerRow.length; i += 2) {
+    const name = headerRow[i]
+    if (!name || name === 'W' || name === 'L' || name === 'TOT' || name === 'DIFF') break
+    if (name) teams.push(name)
+  }
+
+  const canonicalName: Record<string, string> = {}
+  teams.forEach(t => { canonicalName[t.toLowerCase()] = t })
+
+  const data: PlayoffTeamRecord[] = []
+
+  for (const row of rows.slice(1)) {
+    const conf = row[0]
+    const rawName = row[1]
+    if (!rawName || !['AFC', 'NFC'].includes(conf)) break // prima riga vuota = fine tabella
+    if (data.find(d => d.name === (canonicalName[rawName.toLowerCase()] ?? rawName))) continue
+
+    const teamName = canonicalName[rawName.toLowerCase()] ?? rawName
+
+    const vs: Record<string, { wins: number; losses: number }> = {}
+    teams.forEach((opp, i) => {
+      vs[opp] = {
+        wins:   parseNum(row[2 + i * 2]),
+        losses: parseNum(row[3 + i * 2]),
+      }
+    })
+
+    // Ultime 4 colonne: W, L, TOT, DIFF
+    const wCol   = 2 + teams.length * 2
+    const lCol   = wCol + 1
+    const totCol = wCol + 2
+    const difCol = wCol + 3
+
+    data.push({
+      name: teamName,
+      conference: conf as 'AFC' | 'NFC',
+      totalW: parseNum(row[wCol]),
+      totalL: parseNum(row[lCol]),
+      tot:    parseNum(row[totCol]),
+      diff:   parseNum(row[difCol]),
+      vs,
+    })
+  }
+
+  return { teams, data }
+}

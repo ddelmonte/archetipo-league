@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Trophy, Swords, BarChart3, Star, Home, Users } from 'lucide-react'
+import { Trophy, Swords, BarChart3, Star, Home, Users, Flame } from 'lucide-react'
 import clsx from 'clsx'
 
 const links = [
@@ -11,6 +11,7 @@ const links = [
   { href: '/trofei',      label: 'Trofei',        icon: Star },
   { href: '/rivalita',    label: 'Rivalita',      icon: Swords },
   { href: '/classifiche', label: 'Classifiche',   icon: BarChart3 },
+  { href: '/playoff',     label: 'Playoff',       icon: Flame },
   { href: '/squadre',     label: 'Squadre',       icon: Users },
 ]
 
