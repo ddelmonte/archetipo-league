@@ -19,6 +19,24 @@ export default async function RivalitaPage() {
   }
   bestRivalries.sort((a, b) => b.total - a.total || a.diff - b.diff)
 
+  // Per ogni squadra, trova l'avversario con differenza minore (o pareggio)
+  const closestRival: Record<string, { opponent: string; wins: number; losses: number; diff: number; tied: boolean }> = {}
+  for (const team of teams) {
+    const row = records[team] ?? {}
+    let best: { opponent: string; wins: number; losses: number; diff: number; tied: boolean } | null = null
+    for (const opp of teams) {
+      if (opp === team || !row[opp]) continue
+      const { wins, losses } = row[opp]
+      if (wins + losses === 0) continue
+      const diff = Math.abs(wins - losses)
+      const tied = wins === losses
+      if (!best || diff < best.diff || (tied && !best.tied)) {
+        best = { opponent: opp, wins, losses, diff, tied }
+      }
+    }
+    if (best) closestRival[team] = best
+  }
+
   function cellColor(wins: number, losses: number) {
     if (wins === 0 && losses === 0) return 'bg-slate-700/20 text-slate-600'
     if (wins > losses) return 'bg-green-900/40 text-green-400'
@@ -59,6 +77,46 @@ export default async function RivalitaPage() {
                 {leader && (
                   <div className="text-xs text-slate-500 mt-2">In vantaggio: <span className="text-amber-400">{leader}</span></div>
                 )}
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Sfide in bilico per squadra */}
+      <div>
+        <h2 className="text-lg font-bold text-white mb-1">⚖️ Sfida più in bilico</h2>
+        <p className="text-slate-400 text-sm mb-3">Per ogni allenatore, l&apos;avversario con cui il bilancio è più equilibrato</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {teams.map(team => {
+            const rival = closestRival[team]
+            if (!rival) return null
+            const { opponent, wins, losses, tied } = rival
+            return (
+              <div key={team} className={clsx(
+                'card flex items-center gap-4',
+                tied ? 'border-amber-500/60 bg-amber-900/10' : 'border-slate-700'
+              )}>
+                <div className="flex-1 min-w-0">
+                  <div className="font-bold text-white truncate">{team}</div>
+                  <div className="text-xs text-slate-400 mt-0.5">vs <span className="text-slate-300 font-semibold">{opponent}</span></div>
+                </div>
+                <div className="text-center shrink-0">
+                  <div className={clsx(
+                    'text-xl font-extrabold font-mono',
+                    tied ? 'text-amber-400' : wins > losses ? 'text-green-400' : 'text-red-400'
+                  )}>
+                    {wins}–{losses}
+                  </div>
+                  {tied && (
+                    <div className="text-xs text-amber-500 font-semibold mt-0.5">PARITÀ 🤝</div>
+                  )}
+                  {!tied && (
+                    <div className={clsx('text-xs mt-0.5', wins > losses ? 'text-green-600' : 'text-red-600')}>
+                      {wins > losses ? `+${wins - losses}` : `${wins - losses}`}
+                    </div>
+                  )}
+                </div>
               </div>
             )
           })}
