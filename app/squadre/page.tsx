@@ -1,10 +1,10 @@
-export const dynamic = 'force-dynamic'
-
 import { getAllTeamRosters, avatarUrl } from '@/lib/sleeper'
 import { getTeamStats } from '@/lib/sheets'
 import Link from 'next/link'
 import { Users } from 'lucide-react'
 import Image from 'next/image'
+
+export const dynamic = 'force-dynamic'
 
 export default async function SquadrePage() {
   const [teamRosters, sheetStats] = await Promise.all([

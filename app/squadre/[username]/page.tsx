@@ -1,4 +1,4 @@
-import { getTeamRoster, getAllTeamRosters, avatarUrl } from '@/lib/sleeper'
+import { getTeamRoster, avatarUrl } from '@/lib/sleeper'
 import { getTeamStats } from '@/lib/sheets'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
