@@ -92,15 +92,15 @@ export async function getAllTeamRosters(): Promise<TeamRoster[]> {
   const [users, rosters] = await Promise.all([fetchUsers(), fetchRosters()])
 
   // Raccogli tutti gli ID giocatori unici
-  const allPlayerIds = [
-    ...new Set(
+  const allPlayerIds = Array.from(
+    new Set(
       rosters.flatMap((r) => [
         ...(r.players ?? []),
         ...(r.taxi ?? []),
         ...(r.reserve ?? []),
       ])
-    ),
-  ]
+    )
+  )
 
   const playerMap = await fetchPlayersByIds(allPlayerIds)
   const userMap = Object.fromEntries(users.map((u) => [u.user_id, u]))
@@ -109,13 +109,13 @@ export async function getAllTeamRosters(): Promise<TeamRoster[]> {
     .filter((r) => r.owner_id && userMap[r.owner_id])
     .map((roster) => {
       const user = userMap[roster.owner_id]
-      const playerIds = [
-        ...new Set([
+      const playerIds = Array.from(
+        new Set([
           ...(roster.players ?? []),
           ...(roster.taxi ?? []),
           ...(roster.reserve ?? []),
-        ]),
-      ]
+        ])
+      )
       const players = playerIds
         .map((id) => playerMap[id])
         .filter(Boolean) as SleeperPlayer[]
