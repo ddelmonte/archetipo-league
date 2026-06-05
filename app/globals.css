@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --border: #334155;
+  --gold: #f59e0b;
+}
+
+body {
+  background-color: var(--bg);
+  color: #f1f5f9;
+  font-family: system-ui, sans-serif;
+}
+
+.card {
+  @apply bg-slate-800 rounded-xl border border-slate-700 p-6;
+}
+
+.badge-afc {
+  @apply bg-red-900/40 text-red-400 border border-red-800 text-xs font-bold px-2 py-0.5 rounded-full;
+}
+
+.badge-nfc {
+  @apply bg-blue-900/40 text-blue-400 border border-blue-800 text-xs font-bold px-2 py-0.5 rounded-full;
+}
