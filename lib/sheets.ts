@@ -152,6 +152,9 @@ export async function getHeadToHead(): Promise<HeadToHeadMatrix> {
     // Usa il nome canonico dell'header se disponibile, altrimenti il nome grezzo
     const teamName = canonicalName[rawName.toLowerCase()] ?? rawName
 
+    // Salta le sezioni successive (W/L totali, Confronti diretti) che ripetono gli stessi team
+    if (records[teamName]) continue
+
     records[teamName] = {}
     teams.forEach((opp, i) => {
       const wIdx = 2 + i * 2
