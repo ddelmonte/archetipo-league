@@ -137,13 +137,20 @@ export async function getHeadToHead(): Promise<HeadToHeadMatrix> {
     } else if (name === 'W') break
   }
 
+  // Mappa lowercase → nome canonico dall'header (risolve mismatch maiuscole/minuscole)
+  const canonicalName: Record<string, string> = {}
+  teams.forEach(t => { canonicalName[t.toLowerCase()] = t })
+
   const records: Record<string, Record<string, { wins: number; losses: number }>> = {}
 
   for (const row of rows.slice(1)) {
     const conf = row[0]
-    const teamName = row[1]
-    if (!teamName || !['AFC', 'NFC'].includes(conf)) continue
-    if (teamName.includes('TOT') || teamName === 'ALLENATORE') continue
+    const rawName = row[1]
+    if (!rawName || !['AFC', 'NFC'].includes(conf)) continue
+    if (rawName.includes('TOT') || rawName === 'ALLENATORE') continue
+
+    // Usa il nome canonico dell'header se disponibile, altrimenti il nome grezzo
+    const teamName = canonicalName[rawName.toLowerCase()] ?? rawName
 
     records[teamName] = {}
     teams.forEach((opp, i) => {
